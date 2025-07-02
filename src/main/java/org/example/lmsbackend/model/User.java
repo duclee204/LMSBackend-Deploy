@@ -7,6 +7,9 @@ import java.sql.Timestamp;
 @Table(name = "users")
 
 public class User {
+    public enum Role {
+        admin, instructor, student
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -23,10 +26,6 @@ public class User {
 
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
-
-    public enum Role {
-        admin, instructor, student
-    }
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
