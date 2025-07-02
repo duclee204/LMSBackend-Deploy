@@ -5,11 +5,12 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "users")
-
 public class User {
+
     public enum Role {
         admin, instructor, student
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -34,20 +35,32 @@ public class User {
     @Column(name = "verification_token", length = 255)
     private String verificationToken;
 
-    @Column(name = "is_verified", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "is_verified")
     private boolean isVerified = false;
 
     @Column(name = "verified_at")
     private Timestamp verifiedAt;
 
-    @Column(name = "created_at", updatable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at", insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
-    // Getters and Setters
+
+    // ===== Tự động cập nhật thời gian =====
+    @PrePersist
+    protected void onCreate() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    // ===== Getters and Setters =====
     public Integer getUserId() {
         return userId;
     }
