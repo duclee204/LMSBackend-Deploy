@@ -1,7 +1,6 @@
 package org.example.lmsbackend.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,15 +9,16 @@ import java.time.Instant;
 @Entity
 @Table(name = "notifications")
 public class Notification {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id", nullable = false)
     private Integer notificationId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private org.example.lmsbackend.model.User user;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
     @Lob
     @Column(name = "content", nullable = false)
@@ -28,11 +28,10 @@ public class Notification {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @ColumnDefault("0")
-    @Column(name = "is_read")
-    private Boolean isRead;
+    @Column(name = "is_read", nullable = false)
+    private Boolean isRead = false; // Gán mặc định tại Java vì PostgreSQL không hiểu @ColumnDefault khi tạo bảng
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @PrePersist
@@ -40,6 +39,7 @@ public class Notification {
         if (createdAt == null) createdAt = Instant.now();
     }
 
+    // Getters và Setters
     public Integer getId() {
         return notificationId;
     }
@@ -48,11 +48,11 @@ public class Notification {
         this.notificationId = notificationId;
     }
 
-    public org.example.lmsbackend.model.User getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(org.example.lmsbackend.model.User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -87,5 +87,4 @@ public class Notification {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
-
 }

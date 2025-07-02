@@ -48,8 +48,8 @@ public interface UserMapper {
 
     // ➕ Thêm người dùng mới
     @Insert("""
-    INSERT INTO users (username, password, email, full_name, role, is_verified, verified_at)
-    VALUES (#{username}, #{password}, #{email}, #{fullName}, #{role}, TRUE, NOW())
+    INSERT INTO users (username, password, email, full_name, role, is_verified, verified_at, created_at, updated_at)
+    VALUES (#{username}, #{password}, #{email}, #{fullName}, #{role}, TRUE, NOW(), NOW(), NOW())
 """)
     @Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
     int insertUser(User user);
